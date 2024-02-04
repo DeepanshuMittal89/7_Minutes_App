@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="orange">#FFFE4B11</color>
+    <color name="teal1_orange">#E79074</color>
+    <color name="teal2">#B36E86</color>
+    <color name="min_orange">#FA5D2B</color>
+    <color name="toolbar">#EC7847</color>
+</resources>
