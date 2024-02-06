@@ -8,6 +8,7 @@ import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.a7_minutes_app.databinding.ActivityMainBinding
 import org.w3c.dom.Text
 import java.util.Locale
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var currentExercisePosition = -1
     private var tts:TextToSpeech?=null
     private var player:MediaPlayer?=null
+    private var exerciserAdapter:ExerciseNumberAdapter?=null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +44,14 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         tts = TextToSpeech(this,this)
 
         setRestView()
+        setExerciswNumberRecycleView()
+    }
+
+    private fun setExerciswNumberRecycleView() {
+        binding?.rvExerciseNumber?.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        exerciserAdapter = ExerciseNumberAdapter(exerciseList!!)
+        binding?.rvExerciseNumber?.adapter=exerciserAdapter
     }
 
 
@@ -74,7 +84,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             restTime?.cancel()
             restProgress=0
         }
-        setProgressBar()
+        setRestProgressBar()
     }
     private fun setExerciseView(){
         binding?.flProgressBar?.visibility=View.INVISIBLE
@@ -97,7 +107,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 
 
-    private fun setProgressBar(){
+    private fun setRestProgressBar(){
         binding?.progressBar?.progress=restProgress
 
         restTime = object :CountDownTimer(10000,1000){
@@ -109,6 +119,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             override fun onFinish() {
                 currentExercisePosition++
+                exerciseList!![currentExercisePosition].setIsSelected(true)
+                exerciserAdapter!!.notifyDataSetChanged()
                 setExerciseView()
             }
         }.start()
@@ -125,6 +137,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
 
             override fun onFinish() {
+                exerciseList!![currentExercisePosition].setIsSelected(false)
+                exerciseList!![currentExercisePosition].setIsCompleted(true)
+                exerciserAdapter!!.notifyDataSetChanged()
+
+
                 if (currentExercisePosition < exerciseList!!.size - 1) {
                     setRestView()
                 } else {
